@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AnthonyTheSabakumono — Test Hub</title>
+<meta name="description" content="English tests and entrance exam mock practice by AnthonyTheSabakumono. Free, no sign-up.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ─────────────────────────────────────────────────────── */
+:root {
+  --bg:         #0A0A0A;
+  --surface:    #111111;
+  --surface2:   #161616;
+  --surface3:   #1E1E1E;
+  --border:     #242424;
+  --border-hi:  #2E2E2E;
+  --gold:       #C9A84C;
+  --gold-b:     #E8C96A;
+  --gold-dim:   #7A5E28;
+  --gold-glow:  rgba(201,168,76,0.10);
+  --gold-glow2: rgba(201,168,76,0.06);
+  --text:       #F0EDE4;
+  --text-dim:   #6E6A62;
+  --text-mid:   #9A9590;
+  --radius:     8px;
+  --radius-sm:  5px;
+}
+
+/* ── RESET ───────────────────────────────────────────────────────── */
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ── HEADER ─────────────────────────────────────────────────────── */
+.site-header {
+  position: sticky; top: 0; z-index: 100;
+  height: 52px;
+  background: rgba(10,10,10,0.96);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 32px;
+  gap: 16px;
+}
+.brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; font-weight: 500;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.header-sep {
+  width: 1px; height: 16px;
+  background: var(--border-hi);
+}
+.header-tagline {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.05em;
+}
+.header-right {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 12px;
+}
+.yt-link {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 11px; font-family: 'DM Mono', monospace;
+  color: var(--text-dim);
+  border: 1px solid var(--border-hi);
+  border-radius: var(--radius-sm);
+  padding: 5px 11px;
+  letter-spacing: 0.06em;
+  transition: color 0.15s, border-color 0.15s;
+}
+.yt-link:hover { color: var(--gold); border-color: var(--gold-dim); }
+.yt-icon { width: 14px; height: 10px; }
+
+/* ── HERO ────────────────────────────────────────────────────────── */
+.hero {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 72px 32px 48px;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: var(--gold-glow2);
+  border: 1px solid var(--gold-dim);
+  padding: 5px 14px; border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; color: var(--gold);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.eyebrow-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--gold);
+  animation: pulse-dot 2.4s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(32px, 5.5vw, 56px);
+  line-height: 1.1;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  margin-bottom: 16px;
+}
+.hero h1 em {
+  color: var(--gold);
+  font-style: italic;
+}
+.hero-desc {
+  font-size: 15px;
+  color: var(--text-mid);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 36px;
+}
+.hero-stats {
+  display: flex; gap: 32px; flex-wrap: wrap;
+}
+.hstat {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.hstat-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px; color: var(--gold);
+  line-height: 1;
+}
+.hstat-label {
+  font-size: 11px; color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+/* ── DIVIDER ROW ─────────────────────────────────────────────────── */
+.section-head {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 24px;
+}
+.section-head-line { flex: 1; height: 1px; background: var(--border); }
+.section-head-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; color: var(--text-dim);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  white-space: nowrap;
+}
+/* filter bar */
+.filter-bar {
+  max-width: 960px;
+  margin: 0 auto 20px;
+  padding: 0 32px;
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.filter-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 5px 13px; border-radius: 20px;
+  border: 1px solid var(--border-hi);
+  background: transparent; color: var(--text-dim);
+  cursor: pointer; transition: all 0.15s;
+}
+.filter-btn:hover { border-color: var(--gold-dim); color: var(--text); }
+.filter-btn.active { border-color: var(--gold); background: var(--gold-glow); color: var(--gold); }
+
+/* ── GRID ────────────────────────────────────────────────────────── */
+.test-grid {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 32px 80px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 12px;
+}
+
+/* ── TEST CARD ───────────────────────────────────────────────────── */
+.test-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 20px 18px;
+  display: flex; flex-direction: column; gap: 0;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.test-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.test-card:hover {
+  border-color: var(--gold-dim);
+  background: var(--surface2);
+  transform: translateY(-1px);
+}
+.test-card:hover::before { opacity: 1; }
+.test-card.featured {
+  border-color: var(--gold-dim);
+  background: var(--surface2);
+}
+.test-card.featured::before { opacity: 0.6; }
+
+/* card top row */
+.card-top {
+  display: flex; align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.card-id {
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px; color: var(--text-dim);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  background: var(--surface3);
+  border: 1px solid var(--border-hi);
+  padding: 3px 8px; border-radius: 3px;
+}
+.card-badges {
+  display: flex; gap: 6px; align-items: center;
+}
+.badge-new {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: #6A9A5A;
+  border: 1px solid #3A5A30;
+  background: rgba(106,154,90,0.08);
+  padding: 2px 7px; border-radius: 3px;
+}
+.badge-cat {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--gold);
+  border: 1px solid var(--gold-dim);
+  background: var(--gold-glow);
+  padding: 2px 7px; border-radius: 3px;
+}
+
+/* card body */
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 17px; line-height: 1.2;
+  color: var(--text); margin-bottom: 3px;
+}
+.card-subtitle {
+  font-size: 11.5px; color: var(--text-dim);
+  margin-bottom: 12px; font-family: 'DM Mono', monospace;
+  letter-spacing: 0.04em;
+}
+.card-desc {
+  font-size: 12.5px; color: var(--text-mid);
+  line-height: 1.6; margin-bottom: 16px;
+  flex: 1;
+}
+
+/* card meta row */
+.card-meta {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px; margin-bottom: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.meta-item { display: flex; flex-direction: column; gap: 2px; }
+.meta-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px; color: var(--text); font-weight: 500;
+}
+.meta-key {
+  font-size: 9.5px; color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+/* difficulty pips */
+.diff-pips {
+  display: flex; gap: 3px; align-items: center;
+}
+.pip {
+  width: 9px; height: 9px; border-radius: 2px;
+  background: var(--border-hi);
+  transition: background 0.2s;
+}
+.pip.lit { background: var(--gold); }
+.pip.lit-low  { background: #6A9A5A; }
+.pip.lit-high { background: #A84848; }
+
+/* sections tags */
+.card-sections {
+  display: flex; gap: 5px; flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.sec-tag {
+  font-size: 10px; font-family: 'DM Mono', monospace;
+  color: var(--text-dim); letter-spacing: 0.05em;
+  border: 1px solid var(--border-hi);
+  padding: 2px 8px; border-radius: 2px;
+  text-transform: uppercase;
+}
+
+/* CTA button */
+.card-cta {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--surface3);
+  border: 1px solid var(--border-hi);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 12.5px; color: var(--text-mid);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.05em;
+  transition: all 0.15s;
+}
+.test-card:hover .card-cta {
+  background: var(--gold-glow);
+  border-color: var(--gold-dim);
+  color: var(--gold);
+}
+.cta-arrow { font-size: 14px; transition: transform 0.15s; }
+.test-card:hover .cta-arrow { transform: translateX(3px); }
+
+/* ── EMPTY STATE ─────────────────────────────────────────────────── */
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 0;
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+/* ── FOOTER ─────────────────────────────────────────────────────── */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+  max-width: 960px; margin: 0 auto;
+}
+.footer-brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; color: var(--text-dim);
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.footer-note {
+  font-size: 11px; color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .site-header { padding: 0 16px; }
+  .header-tagline { display: none; }
+  .hero { padding: 48px 16px 36px; }
+  .section-head,
+  .filter-bar,
+  .test-grid,
+  .site-footer { padding-left: 16px; padding-right: 16px; }
+  .test-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 20px; }
+}
+
+/* ── REDUCED MOTION ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .eyebrow-dot { animation: none; }
+  .test-card:hover { transform: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ────────────────────────────────────────────────────── -->
+<header class="site-header">
+  <span class="brand">AnthonyTheSabakumono</span>
+  <div class="header-sep"></div>
+  <span class="header-tagline">TEST HUB</span>
+  <div class="header-right">
+    <a href="https://www.youtube.com/@AnthonyTheSabakumono" target="_blank" class="yt-link" aria-label="YouTube Channel">
+      <!-- YouTube icon SVG -->
+      <svg class="yt-icon" viewBox="0 0 576 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.321-42.003 24.947-48.284 48.597C15 167.18 15 256.36 15 256.36s0 89.179 11.345 132.277c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.542c23.497-6.321 42.003-24.171 48.284-47.821C561 345.539 561 256.36 561 256.36s0-89.18-11.345-132.277zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/>
+      </svg>
+      YouTube
+    </a>
+  </div>
+</header>
+
+<!-- ── HERO ──────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <span class="eyebrow-dot"></span>
+    Үнэгүй · Англи - Монгол
+  </div>
+  <h1>AnthonyTheSabakumono<br><em>нэрийн шалгалтууд</em></h1>
+  <p class="hero-desc">
+    Доорх шалгалтуудаас хүссэнээ сонгоод өөрийгөө сориод үзээрэй
+  </p>
+  <div class="hero-stats" id="hero-stats">
+    <!-- filled by JS -->
+  </div>
+</section>
+
+<!-- ── TEST LIST ─────────────────────────────────────────────────── -->
+<div class="section-head">
+  <div class="section-head-line"></div>
+  <span class="section-head-label">Шалгалтууд</span>
+  <div class="section-head-line"></div>
+</div>
+
+<div class="filter-bar" id="filter-bar">
+  <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All</button>
+  <!-- category buttons injected by JS -->
+</div>
+
+<div class="test-grid" id="test-grid">
+  <!-- cards injected by JS -->
+</div>
+
+<!-- ── FOOTER ────────────────────────────────────────────────────── -->
+<footer>
+  <div class="site-footer">
+    <span class="footer-brand">© AnthonyTheSabakumono</span>
+    <span class="footer-note">Шинчлэлтүүд үргэлж орсоор байх болно - YouTube subscribe!</span>
+  </div>
+</footer>
+
+<!-- ── DATA ──────────────────────────────────────────────────────── -->
+<script src="tests.js"></script>
+
+<!-- ── APP ───────────────────────────────────────────────────────── -->
+<script>
+// ── Helpers ──────────────────────────────────────────────────────
+function diffPips(level) {
+  const labels = ['', 'Beginner', 'Elementary', 'Intermediate', 'Upper-Intermediate', 'Advanced'];
+  let cls = '';
+  if (level <= 2) cls = 'lit-low';
+  else if (level >= 5) cls = 'lit-high';
+  else cls = 'lit';
+  const pips = Array.from({ length: 5 }, (_, i) =>
+    `<span class="pip ${i < level ? cls : ''}"></span>`
+  ).join('');
+  return `<div class="diff-pips" title="${labels[level] || ''}">${pips}</div>`;
+}
+
+function buildCard(t) {
+  const badges = [
+    t.new      ? `<span class="badge-new">New</span>` : '',
+    t.category ? `<span class="badge-cat">${t.category}</span>` : '',
+  ].filter(Boolean).join('');
+
+  const sections = t.sections.map(s => `<span class="sec-tag">${s}</span>`).join('');
+
+  return `
+  <a class="test-card${t.featured ? ' featured' : ''}" href="${t.href}" data-category="${t.category}">
+    <div class="card-top">
+      <span class="card-id">${t.id}</span>
+      <div class="card-badges">${badges}</div>
+    </div>
+    <div class="card-title">${t.title}</div>
+    <div class="card-subtitle">${t.subtitle}</div>
+    <div class="card-desc">${t.desc}</div>
+    <div class="card-meta">
+      <div class="meta-item">
+        <span class="meta-val">${t.questions}Q</span>
+        <span class="meta-key">Асуулт</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-val">${t.minutes} min</span>
+        <span class="meta-key">Хугацаа</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-val">${t.score}</span>
+        <span class="meta-key">Оноо</span>
+      </div>
+    </div>
+    <div class="meta-item" style="margin-bottom:12px;">
+      ${diffPips(t.difficulty)}
+      <span class="meta-key" style="margin-top:4px;">Difficulty</span>
+    </div>
+    <div class="card-sections">${sections}</div>
+    <div class="card-cta">
+      <span>Start Test</span>
+      <span class="cta-arrow">→</span>
+    </div>
+  </a>`;
+}
+
+// ── Stats ─────────────────────────────────────────────────────────
+function renderStats() {
+  const total = TESTS.length;
+  const totalQs = TESTS.reduce((a, t) => a + t.questions, 0);
+  const cats = [...new Set(TESTS.map(t => t.category))].length;
+  document.getElementById('hero-stats').innerHTML = `
+    <div class="hstat">
+      <span class="hstat-num">${total}</span>
+      <span class="hstat-label">Нийт шалгалт</span>
+    </div>
+    <div class="hstat">
+      <span class="hstat-num">${totalQs}</span>
+      <span class="hstat-label">Асуулт</span>
+    </div>
+    <div class="hstat">
+      <span class="hstat-num">${cats}</span>
+      <span class="hstat-label">Төрөл</span>
+    </div>
+    <div class="hstat">
+      <span class="hstat-num">Free</span>
+      <span class="hstat-label">Үнэ</span>
+    </div>
+  `;
+}
+
+// ── Filter ────────────────────────────────────────────────────────
+let currentFilter = 'all';
+
+function buildFilterButtons() {
+  const cats = [...new Set(TESTS.map(t => t.category))];
+  const bar = document.getElementById('filter-bar');
+  cats.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.dataset.filter = c;
+    btn.textContent = c;
+    btn.onclick = () => setFilter(c, btn);
+    bar.appendChild(btn);
+  });
+}
+
+function setFilter(val, btn) {
+  currentFilter = val;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards();
+}
+
+// ── Cards ─────────────────────────────────────────────────────────
+function renderCards() {
+  const grid = document.getElementById('test-grid');
+  const visible = currentFilter === 'all'
+    ? TESTS
+    : TESTS.filter(t => t.category === currentFilter);
+
+  if (visible.length === 0) {
+    grid.innerHTML = '<div class="empty-state">Шалгалт ороогүй байна — дараа ахин шалгана уу.</div>';
+    return;
+  }
+
+  // Featured first, then newest (by array order)
+  const sorted = [...visible].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+  grid.innerHTML = sorted.map(buildCard).join('');
+}
+
+// ── Init ──────────────────────────────────────────────────────────
+renderStats();
+buildFilterButtons();
+renderCards();
+</script>
+
+</body>
+</html>
