@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proficiency Test — AnthonyTheSabakumono</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #111111;
+    --surface2: #181818;
+    --surface3: #202020;
+    --border: #2A2A2A;
+    --gold: #C9A84C;
+    --gold-bright: #E8C96A;
+    --gold-dim: #7A5E28;
+    --gold-glow: rgba(201,168,76,0.12);
+    --text: #F0EDE4;
+    --text-dim: #7A7670;
+    --text-hint: #3A3834;
+    --green: #6A9A5A;
+    --red: #A84848;
+    --radius: 6px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 52px;
+  }
+  .brand { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; }
+  .header-meta { display: flex; align-items: center; gap: 16px; }
+  .progress-label { font-size: 11px; color: var(--text-dim); font-family: 'DM Mono', monospace; }
+  .progress-track { width: 120px; height: 2px; background: var(--border); border-radius: 1px; }
+  .progress-bar { height: 100%; background: var(--gold); border-radius: 1px; transition: width 0.4s ease; width: 0%; }
+  .timer { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--gold); }
+
+  /* ── LOADING ── */
+  .loading-screen {
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 16px;
+  }
+  .loading-spinner {
+    width: 36px; height: 36px; border: 2px solid var(--border);
+    border-top-color: var(--gold); border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-dim); letter-spacing: 0.08em; }
+  .error-screen {
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 12px;
+    padding: 24px; text-align: center;
+  }
+  .error-icon { font-size: 36px; }
+  .error-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--text); }
+  .error-msg { font-size: 13px; color: var(--text-dim); max-width: 420px; line-height: 1.6; }
+  .error-code { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--red); margin-top: 4px; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 64px 24px 40px;
+    max-width: 760px; margin: 0 auto;
+    text-align: center;
+  }
+  .mock-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--gold-glow); border: 1px solid var(--gold-dim);
+    padding: 5px 14px; border-radius: 20px;
+    font-size: 11px; font-family: 'DM Mono', monospace; color: var(--gold);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 5vw, 44px);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .hero h1 em { color: var(--gold); font-style: italic; }
+  .hero-sub { color: var(--text-dim); font-size: 14px; max-width: 480px; margin: 0 auto 28px; }
+  .stats-row { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--gold); }
+  .stat-label { font-size: 11px; color: var(--text-dim); letter-spacing: 0.05em; }
+
+  /* ── INSTRUCTIONS ── */
+  .instructions {
+    max-width: 760px; margin: 0 auto 40px;
+    padding: 0 24px;
+  }
+  .instr-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px 24px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;
+  }
+  .instr-item { display: flex; gap: 10px; align-items: flex-start; }
+  .instr-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .instr-text { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+  .instr-text strong { color: var(--text); display: block; margin-bottom: 2px; }
+
+  /* ── SECTION BLOCK ── */
+  .section-wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+  .section-divider {
+    display: flex; align-items: center; gap: 16px;
+    margin: 48px 0 24px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+  .section-badge {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 16px; border-radius: 20px;
+    border: 1px solid var(--gold-dim);
+    background: var(--gold-glow);
+  }
+  .section-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold-dim); }
+  .section-name { font-family: 'DM Serif Display', serif; font-size: 15px; color: var(--gold); }
+  .section-count { font-size: 11px; color: var(--text-dim); }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 22px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .q-card:hover { border-color: var(--gold-dim); }
+  .q-card.answered { border-color: var(--gold-dim); background: var(--surface2); }
+  .q-card.correct { border-color: var(--green) !important; background: rgba(106,154,90,0.05) !important; }
+  .q-card.wrong { border-color: var(--red) !important; background: rgba(168,72,72,0.05) !important; }
+  .q-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 14px; }
+  .q-num-badge {
+    background: var(--surface3); border: 1px solid var(--border);
+    border-radius: 4px; padding: 3px 8px;
+    font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-dim);
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .q-text { font-size: 14.5px; color: var(--text); line-height: 1.55; }
+  .q-text .blank {
+    display: inline-block;
+    min-width: 80px; height: 1px;
+    background: var(--gold-dim); vertical-align: middle;
+    margin: 0 4px; position: relative; top: -4px;
+  }
+
+  /* ── OPTIONS ── */
+  .options { display: flex; flex-direction: column; gap: 6px; }
+  .opt-btn {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 9px 14px;
+    cursor: pointer; text-align: left;
+    transition: all 0.15s; font-family: 'Outfit', sans-serif; font-size: 13.5px; color: var(--text);
+    width: 100%;
+  }
+  .opt-btn:hover { border-color: var(--gold-dim); background: var(--surface3); }
+  .opt-btn.selected { border-color: var(--gold); background: var(--gold-glow); color: var(--gold-bright); }
+  .opt-btn.reveal-correct { border-color: var(--green) !important; background: rgba(106,154,90,0.12) !important; color: #8aba78 !important; }
+  .opt-btn.reveal-wrong { border-color: var(--red) !important; background: rgba(168,72,72,0.1) !important; color: #c07070 !important; }
+  .opt-letter {
+    width: 22px; height: 22px; border-radius: 3px;
+    background: var(--surface3); border: 1px solid var(--border);
+    font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-dim);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .opt-btn.selected .opt-letter { background: var(--gold); border-color: var(--gold); color: #1a1000; }
+  .opt-btn.reveal-correct .opt-letter { background: var(--green); border-color: var(--green); color: #fff; }
+  .opt-btn.reveal-wrong .opt-letter { background: var(--red); border-color: var(--red); color: #fff; }
+
+  /* ── SUBMIT ── */
+  .submit-wrap { max-width: 760px; margin: 48px auto; padding: 0 24px; }
+  .submit-btn {
+    width: 100%; padding: 16px;
+    background: var(--gold); border: none; border-radius: 6px;
+    font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600;
+    color: #1a1000; cursor: pointer;
+    transition: all 0.2s; letter-spacing: 0.02em;
+  }
+  .submit-btn:hover { background: var(--gold-bright); transform: translateY(-1px); }
+  .submit-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+  .answered-status { text-align: center; margin-top: 12px; font-size: 13px; color: var(--text-dim); font-family: 'DM Mono', monospace; }
+
+  /* ── RESULTS ── */
+  .results { max-width: 760px; margin: 0 auto; padding: 0 24px 80px; display: none; }
+
+  .result-hero {
+    text-align: center; padding: 52px 24px 40px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; margin-bottom: 16px;
+    position: relative; overflow: hidden;
+  }
+  .result-hero::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent 0%, var(--gold-dim) 20%, var(--gold) 50%, var(--gold-dim) 80%, transparent 100%);
+    animation: shimmer-line 3s ease-in-out infinite;
+  }
+  @keyframes shimmer-line {
+    0%,100% { opacity: 0.5; }
+    50%      { opacity: 1; }
+  }
+  .result-hero::after {
+    content: ''; position: absolute;
+    top: 50%; left: 50%; transform: translate(-50%, -60%);
+    width: 280px; height: 280px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .result-tier-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 5px 16px; border-radius: 20px; margin-bottom: 20px;
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    border: 1px solid var(--gold-dim);
+    background: var(--gold-glow); color: var(--gold);
+    transition: all 0.4s;
+  }
+  .result-tier-badge.tier-elite  { border-color: #C9A84C; background: rgba(201,168,76,0.12); color: #E8C96A; }
+  .result-tier-badge.tier-strong { border-color: #6A9A5A; background: rgba(106,154,90,0.10); color: #8aba78; }
+  .result-tier-badge.tier-dev    { border-color: #7A5E28; background: rgba(201,168,76,0.06); color: #C9A84C; }
+  .result-tier-badge.tier-begin  { border-color: #5A5A5A; background: rgba(90,90,90,0.10);   color: #888; }
+  .tier-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: currentColor; opacity: 0.8;
+  }
+
+  .result-score-big {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(64px, 12vw, 92px);
+    line-height: 1; margin-bottom: 4px;
+    letter-spacing: -0.02em;
+    background: linear-gradient(160deg, var(--gold-bright) 0%, var(--gold) 60%, var(--gold-dim) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative; z-index: 1;
+  }
+  .result-score-label {
+    font-size: 11px; color: var(--text-dim);
+    font-family: 'DM Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .result-band {
+    font-size: 17px; color: var(--text); margin-top: 16px;
+    font-family: 'DM Serif Display', serif; letter-spacing: 0.01em;
+  }
+  .result-raw {
+    font-family: 'DM Mono', monospace; font-size: 11.5px;
+    color: var(--text-dim); margin-top: 8px; letter-spacing: 0.04em;
+  }
+
+  .score-ring-wrap {
+    position: relative; display: inline-block; margin-bottom: 8px;
+  }
+  .score-ring {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.15);
+    box-shadow: 0 0 40px rgba(201,168,76,0.06), inset 0 0 40px rgba(201,168,76,0.03);
+    pointer-events: none;
+    animation: ring-pulse 3s ease-in-out infinite;
+  }
+  @keyframes ring-pulse {
+    0%,100% { opacity: 0.4; transform: translate(-50%,-50%) scale(1); }
+    50%      { opacity: 0.9; transform: translate(-50%,-50%) scale(1.04); }
+  }
+
+  /* ── LEVEL LADDER ── */
+  .ladder-section { margin-bottom: 16px; }
+  .breakdown-label {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 12px; display: flex; align-items: center; gap: 12px;
+  }
+  .breakdown-label::before, .breakdown-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+  .ladder-track {
+    display: flex; gap: 6px; margin-bottom: 8px;
+  }
+  .ladder-step {
+    flex: 1; text-align: center; padding: 10px 4px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); transition: all 0.3s;
+  }
+  .ladder-step .ladder-code {
+    font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-dim);
+    display: block; margin-bottom: 2px;
+  }
+  .ladder-step .ladder-name {
+    font-size: 9.5px; color: var(--text-hint); letter-spacing: 0.03em;
+  }
+  .ladder-step.achieved {
+    border-color: var(--gold); background: var(--gold-glow);
+  }
+  .ladder-step.achieved .ladder-code { color: var(--gold-bright); }
+  .ladder-step.achieved .ladder-name { color: var(--gold); }
+  .ladder-bar-track {
+    height: 4px; background: var(--border); border-radius: 2px; overflow: hidden;
+  }
+  .ladder-bar-fill {
+    height: 100%; border-radius: 2px; width: 0%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    transition: width 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* advice card */
+  .advice-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 3px solid var(--gold-dim); border-radius: var(--radius);
+    padding: 18px 20px; margin-bottom: 16px;
+    transition: border-left-color 0.4s;
+  }
+  .advice-title {
+    font-size: 10px; font-family: 'DM Mono', monospace; color: var(--gold);
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .advice-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .advice-text { font-size: 13.5px; color: var(--text-dim); line-height: 1.7; }
+
+  /* share row */
+  .result-share {
+    display: flex; gap: 8px; margin-bottom: 12px;
+  }
+  .share-btn {
+    flex: 1; padding: 11px 14px;
+    background: var(--gold); border: none; border-radius: 6px;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+    color: #1a1000; cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+  }
+  .share-btn:hover { background: var(--gold-bright); transform: translateY(-1px); }
+  .share-btn.secondary {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-dim); flex: 0 0 auto; padding: 11px 16px;
+  }
+  .share-btn.secondary:hover { border-color: var(--gold-dim); color: var(--text); background: transparent; transform: translateY(-1px); }
+
+  .reset-btn {
+    width: 100%; padding: 12px; background: transparent;
+    border: 1px solid var(--border); border-radius: 6px;
+    font-family: 'Outfit', sans-serif; font-size: 13px; color: var(--text-dim);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .reset-btn:hover { border-color: var(--gold-dim); color: var(--text); }
+
+  @keyframes score-reveal {
+    from { opacity: 0; transform: translateY(10px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .score-animate-in { animation: score-reveal 0.5s cubic-bezier(0.22,1,0.36,1) both; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 540px) {
+    .stats-row { gap: 20px; }
+    .instr-card { grid-template-columns: 1fr; }
+    .header-meta .timer { display: none; }
+    .ladder-track { flex-wrap: wrap; }
+    .ladder-step { flex: 1 1 30%; }
+  }
+
+  /* ── SCROLL TO TOP ── */
+  .scroll-top {
+    position: fixed; bottom: 24px; right: 24px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--gold); border: none; cursor: pointer;
+    color: #1a1000; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  }
+  .scroll-top.visible { opacity: 1; pointer-events: all; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="brand">AnthonyTheSabakumono</div>
+  <div class="header-meta">
+    <span class="progress-label" id="hdr-progress">0 / —</span>
+    <div class="progress-track"><div class="progress-bar" id="hdr-bar"></div></div>
+    <span class="timer" id="timer">—:—</span>
+  </div>
+</header>
+
+<!-- LOADING -->
+<div id="loading-screen" class="loading-screen">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">АСУУЛТ АЧААЛЛАЖ БАЙНА…</div>
+</div>
+
+<!-- ERROR -->
+<div id="error-screen" class="error-screen" style="display:none">
+  <div class="error-icon">⚠️</div>
+  <div class="error-title">questions.json олдсонгүй</div>
+  <div class="error-msg">Файлыг <strong>index.html</strong>-тэй нэг хавтасд байрлуулсан эсэхийг шалгана уу. Хэрэв GitHub Pages дээр байгаа бол хоёр файл хоёулаа commit хийгдсэн эсэхийг нягтлаарай.</div>
+  <div class="error-code" id="error-code"></div>
+</div>
+
+<!-- MAIN CONTENT (hidden until data loads) -->
+<div id="main-content" style="display:none">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="mock-tag" id="hero-tag">Proficiency Test · <span id="hero-seed"></span></div>
+  <h1 id="hero-title">ТҮВШИН <em>ТОГТООХ ТЕСТ</em></h1>
+  <p class="hero-sub" id="hero-sub">Асуултууд сан дотроос санамсаргүй сонгогдож, таны түвшинг тодорхойлно</p>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num" id="hero-total">—</div><div class="stat-label">Асуултууд</div></div>
+    <div class="stat"><div class="stat-num" id="hero-time">—</div><div class="stat-label">Минут</div></div>
+    <div class="stat"><div class="stat-num" id="hero-levels">—</div><div class="stat-label">Түвшин</div></div>
+  </div>
+</div>
+
+<!-- INSTRUCTIONS -->
+<div class="instructions">
+  <div class="instr-card">
+    <div class="instr-item">
+      <div class="instr-icon">📋</div>
+      <div class="instr-text">
+        <strong>Зөвхөн нэг хариулт</strong>
+        Зөв гэж үзсэн нэг л хариултыг сонгоно.
+      </div>
+    </div>
+    <div class="instr-item">
+      <div class="instr-icon">🎲</div>
+      <div class="instr-text">
+        <strong>Санамсаргүй асуулт</strong>
+        Тест тус бүр өөр өөр асуулттай — дахин өгөхөд шинэ дасгал.
+      </div>
+    </div>
+    <div class="instr-item">
+      <div class="instr-icon">⏱</div>
+      <div class="instr-text">
+        <strong>Хугацаатай</strong>
+        Анхныхаа хариултыг сонгосон цагаас эхлээд цаг явж эхэлнэ.
+      </div>
+    </div>
+    <div class="instr-item">
+      <div class="instr-icon">📊</div>
+      <div class="instr-text">
+        <strong>Түвшин тогтооно</strong>
+        Дүн бус, зөв хариултын хувиар таны түвшинг тодорхойлно.
+      </div>
+    </div>
+    <div class="instr-item">
+      <div class="instr-icon">✅</div>
+      <div class="instr-text">
+        <strong>Үр дүн харах</strong>
+        Бүх асуултандаа хариулаад "ҮР ДҮН ХАРАХ" товчин дээр дарна.
+      </div>
+    </div>
+    <div class="instr-item">
+      <div class="instr-icon">🔔</div>
+      <div class="instr-text">
+        <strong>Subscribe</strong>
+        Түвшингээ харчихаад сувагаа дагахаа мартваа.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="section-wrap" id="quiz-wrap">
+  <div class="section-divider">
+    <div class="section-badge">
+      <span class="section-name" id="section-name">Асуултууд</span>
+      <span class="section-count" id="q-count">· — Асуулт</span>
+    </div>
+  </div>
+  <div id="quiz-qs"></div>
+</div>
+
+<!-- SUBMIT -->
+<div class="submit-wrap">
+  <button class="submit-btn" id="submit-btn" onclick="submitTest()" disabled>
+     ҮР ДҮН ХАРАХ →
+  </button>
+  <div class="answered-status" id="answered-status">Бүх асуултанд хариулсан эсэхээ нягтлаарай!</div>
+</div>
+
+<!-- RESULTS -->
+<div class="results" id="results">
+
+  <!-- Score hero -->
+  <div class="result-hero">
+    <div class="result-tier-badge" id="res-tier-badge">
+      <span class="tier-dot"></span>
+      <span id="res-tier-label">—</span>
+    </div>
+    <div class="score-ring-wrap">
+      <div class="score-ring"></div>
+      <div class="result-score-big" id="res-scaled">—</div>
+    </div>
+    <div class="result-score-label" id="res-score-label">Зөв хариултын хувь</div>
+    <div class="result-band" id="res-band"></div>
+    <div class="result-raw" id="res-raw"></div>
+  </div>
+
+  <!-- Level ladder -->
+  <div class="ladder-section">
+    <div class="breakdown-label">Түвшингийн шаталбар</div>
+    <div class="ladder-track" id="ladder-track"></div>
+    <div class="ladder-bar-track"><div class="ladder-bar-fill" id="ladder-bar"></div></div>
+  </div>
+
+  <!-- Advice -->
+  <div class="advice-card" id="advice-card">
+    <div class="advice-title">Anthony's Analysis</div>
+    <div class="advice-text" id="res-advice"></div>
+  </div>
+
+  <!-- Actions -->
+  <div class="result-share">
+    <button class="share-btn" onclick="copyScore()">
+      <span id="copy-icon">📋</span> Үр дүн хуулах
+    </button>
+    <button class="share-btn secondary" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Дээш</button>
+  </div>
+  <button class="reset-btn" onclick="resetTest()">↺ Ахин өгөх — шинэ асуулттай</button>
+
+</div>
+
+</div><!-- /main-content -->
+
+<button class="scroll-top" id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+// DATA FORMAT (questions.json):
+// {
+//   "meta": {
+//     "title": "English Proficiency Test",
+//     "title_em": "БҮРЭН ТЕСТ",          // italic/gold part of <h1>, optional
+//     "subtitle_mn": "...",
+//     "pick": 25,                        // how many questions to randomly draw
+//     "time_minutes": 30,                // 0/omit = no timer
+//     "levels": [                        // sorted HIGH → LOW, first match wins
+//       { "min_pct": 90, "code": "C2", "label": "Proficient",   "label_mn": "Мастер",      "advice_mn": "..." },
+//       { "min_pct": 75, "code": "C1", "label": "Advanced",     "label_mn": "Ахисан",      "advice_mn": "..." },
+//       { "min_pct": 60, "code": "B2", "label": "Upper-Inter.", "label_mn": "Дундаас дээш", "advice_mn": "..." },
+//       { "min_pct": 45, "code": "B1", "label": "Intermediate", "label_mn": "Дунд",        "advice_mn": "..." },
+//       { "min_pct": 25, "code": "A2", "label": "Elementary",   "label_mn": "Анхан шат",   "advice_mn": "..." },
+//       { "min_pct": 0,  "code": "A1", "label": "Beginner",     "label_mn": "Эхлэл",       "advice_mn": "..." }
+//     ]
+//   },
+//   "questions": [
+//     { "id": 1, "question": "Choose the sentence with the best use of the subjunctive mood:",
+//       "options": ["If I was you, I would study harder.", "If I were you, I would study harder.",
+//                    "If I am you, I would study harder.", "If I be you, I would study harder."],
+//       "answer": 1 }
+//   ]
+// }
+// `answer` is a 0-based index into `options`. `id` just needs to be unique —
+// it's what pickRandom draws from, so you can safely reorder/add/remove
+// questions in the bank without breaking anything.
+// ══════════════════════════════════════════════════════════════════
+
+let allLevels   = [];   // meta.levels, high → low
+let quizQs      = [];   // the randomly picked question set for this session
+let timeMinutes = 0;
+
+// Used only if questions.json has no meta.levels (e.g. plain-array format)
+const DEFAULT_LEVELS = [
+  { min_pct: 90, code: 'C2', label: 'Proficient',         label_mn: 'Мастер',       advice_mn: 'Гайхалтай! 90%+ зөв хариуллаа.' },
+  { min_pct: 75, code: 'C1', label: 'Advanced',           label_mn: 'Ахисан',       advice_mn: 'Маш сайн байна, цөөн алдаа гарлаа.' },
+  { min_pct: 60, code: 'B2', label: 'Upper-Intermediate', label_mn: 'Дундаас дээш', advice_mn: 'Сайн үр дүн, суурь мэдлэг бат бөх байна.' },
+  { min_pct: 45, code: 'B1', label: 'Intermediate',       label_mn: 'Дунд',         advice_mn: 'Дунд түвшинд байна, тогтмол давт.' },
+  { min_pct: 25, code: 'A2', label: 'Elementary',         label_mn: 'Анхан шат',    advice_mn: 'Анхан шатны түвшин, суурь дүрэм дээр анхаарлаа хандуул.' },
+  { min_pct: 0,  code: 'A1', label: 'Beginner',           label_mn: 'Эхлэл',        advice_mn: 'Эхлэл — хэн бүхэн энэ түвшнээс эхэлдэг.' }
+];
+
+const answers = {};
+let timerInterval = null;
+let secondsLeft = 0;
+let timerStarted = false;
+let submitted = false;
+let totalQ = 0;
+
+// ── HELPERS ──────────────────────────────────────────────────────
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function pickRandom(arr, n) {
+  return shuffle(arr).slice(0, Math.min(n, arr.length));
+}
+
+function letterFor(i) { return String.fromCharCode(65 + i); } // 0->A, 1->B, ...
+
+// ── LOAD & PICK ───────────────────────────────────────────────────
+async function loadAndBuild() {
+  try {
+    const res = await fetch('questions.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status} — ${res.statusText}`);
+    const raw = await res.json();
+
+    // Accept two shapes:
+    //  1) { meta: {...}, questions: [...] }   ← preferred, lets you set levels/pick/timer
+    //  2) [ {...}, {...}, ... ]               ← plain array, just the questions themselves
+    const isPlainArray = Array.isArray(raw);
+    const bank = isPlainArray ? { meta: {}, questions: raw } : raw;
+
+    if (!Array.isArray(bank.questions) || bank.questions.length === 0) {
+      throw new Error('questions.json must contain a "questions" array (or just be an array of questions) — none found.');
+    }
+
+    const meta = bank.meta || {};
+    allLevels  = (meta.levels && meta.levels.length) ? meta.levels : DEFAULT_LEVELS;
+    timeMinutes = meta.time_minutes || 0;
+    secondsLeft = timeMinutes * 60;
+
+    const pickN = meta.pick || bank.questions.length;
+    quizQs = pickRandom(bank.questions, pickN);
+    totalQ = quizQs.length;
+
+    // Hero text
+    document.getElementById('hero-title').innerHTML =
+      (meta.title || 'ТҮВШИН ТОГТООХ ТЕСТ') +
+      (meta.title_em ? ` <em>${meta.title_em}</em>` : '');
+    document.getElementById('hero-sub').textContent =
+      meta.subtitle_mn || 'Асуултууд сан дотроос санамсаргүй сонгогдож, таны түвшинг тодорхойлно';
+    document.getElementById('hero-tag').innerHTML =
+      (meta.title || 'Proficiency Test') + ' · <span id="hero-seed"></span>';
+
+    document.getElementById('hero-total').textContent  = totalQ;
+    document.getElementById('hero-time').textContent   = timeMinutes > 0 ? timeMinutes : '∞';
+    document.getElementById('hero-levels').textContent = allLevels.length || '—';
+    document.getElementById('q-count').textContent     = `· ${totalQ} Асуулт`;
+    document.getElementById('hdr-progress').textContent = `0 / ${totalQ}`;
+    document.getElementById('timer').textContent = timeMinutes > 0
+      ? `${String(timeMinutes).padStart(2,'0')}:00` : '∞';
+
+    // Seed label
+    const seed = Math.floor(Math.random() * 0xFFF).toString(16).toUpperCase().padStart(3,'0');
+    const seedEl = document.getElementById('hero-seed');
+    if (seedEl) seedEl.textContent = `Seed #${seed}`;
+
+    // Build UI
+    buildQuiz(quizQs);
+    updateProgress();
+
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('main-content').style.display   = 'block';
+
+  } catch (err) {
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('error-screen').style.display   = 'flex';
+    document.getElementById('error-code').textContent       = String(err);
+  }
+}
+
+// ── BUILD UI ─────────────────────────────────────────────────────
+function buildQuiz(questions) {
+  const container = document.getElementById('quiz-qs');
+  container.innerHTML = '';
+  questions.forEach((q, i) => container.appendChild(makeCard(q, i + 1)));
+}
+
+function makeCard(q, num) {
+  const card = document.createElement('div');
+  card.className = 'q-card';
+  card.id = `card-${num}`;
+  card.dataset.qid = q.id;
+
+  card.innerHTML = `
+    <div class="q-header">
+      <span class="q-num-badge">Q${num}</span>
+      <span class="q-text">${q.question}</span>
+    </div>
+    <div class="options">
+      ${q.options.map((opt, i) => `
+        <button class="opt-btn" onclick="selectAnswer(${num}, ${i}, ${q.answer}, this)">
+          <span class="opt-letter">${letterFor(i)}</span>
+          <span>${opt}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+  return card;
+}
+
+// ── INTERACTION ──────────────────────────────────────────────────
+function selectAnswer(num, chosenIdx, correctIdx, btn) {
+  if (submitted) return;
+  if (!timerStarted && timeMinutes > 0) startTimer();
+  timerStarted = true;
+
+  const card = document.getElementById(`card-${num}`);
+  card.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  card.classList.add('answered');
+
+  answers[num] = { chosen: chosenIdx, correct: correctIdx };
+  updateProgress();
+}
+
+function updateProgress() {
+  const count = Object.keys(answers).length;
+  const pct = totalQ > 0 ? (count / totalQ) * 100 : 0;
+  document.getElementById('hdr-bar').style.width      = pct + '%';
+  document.getElementById('hdr-progress').textContent = `${count} / ${totalQ}`;
+
+  if (count === totalQ && totalQ > 0) {
+    document.getElementById('submit-btn').disabled         = false;
+    document.getElementById('answered-status').textContent = '✓ Бүх асуулт хариуллаа — илгээхэд бэлэн';
+  } else {
+    document.getElementById('submit-btn').disabled         = true;
+    document.getElementById('answered-status').textContent = `${count} / ${totalQ} хариуллаа`;
+  }
+}
+
+// ── TIMER ────────────────────────────────────────────────────────
+function startTimer() {
+  timerInterval = setInterval(() => {
+    secondsLeft--;
+    const m = Math.floor(secondsLeft / 60);
+    const s = secondsLeft % 60;
+    document.getElementById('timer').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    if (secondsLeft <= 300) document.getElementById('timer').style.color = '#A84848';
+    if (secondsLeft <= 0) { clearInterval(timerInterval); submitTest(); }
+  }, 1000);
+}
+
+// ── LEVEL LOOKUP ─────────────────────────────────────────────────
+function levelForPct(pct) {
+  // allLevels assumed sorted high -> low by min_pct; first match wins
+  for (const lvl of allLevels) {
+    if (pct >= lvl.min_pct) return lvl;
+  }
+  return allLevels[allLevels.length - 1] || { code: '—', label_mn: '—', advice_mn: '' };
+}
+
+function tierClassFor(levelIndex, total) {
+  // top level -> elite, then strong, dev, begin (roughly quartiled)
+  const frac = levelIndex / Math.max(total - 1, 1);
+  if (frac <= 0.15) return 'tier-elite';
+  if (frac <= 0.45) return 'tier-strong';
+  if (frac <= 0.75) return 'tier-dev';
+  return 'tier-begin';
+}
+
+// ── SUBMIT ───────────────────────────────────────────────────────
+function submitTest() {
+  submitted = true;
+  clearInterval(timerInterval);
+
+  let correctCount = 0;
+  Object.entries(answers).forEach(([num, data]) => {
+    const card = document.getElementById(`card-${num}`);
+    card.querySelectorAll('.opt-btn').forEach((btn, i) => {
+      if (i === data.correct) btn.classList.add('reveal-correct');
+      else if (i === data.chosen) btn.classList.add('reveal-wrong');
+      btn.classList.remove('selected');
+    });
+    const isCorrect = data.chosen === data.correct;
+    card.classList.remove('answered');
+    card.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (isCorrect) correctCount++;
+  });
+
+  const pct = totalQ > 0 ? (correctCount / totalQ) * 100 : 0;
+  const level = levelForPct(pct);
+  const levelIdx = allLevels.indexOf(level);
+  const tierClass = tierClassFor(levelIdx, allLevels.length);
+
+  // Tier badge
+  const badge = document.getElementById('res-tier-badge');
+  badge.className = 'result-tier-badge ' + tierClass;
+  document.getElementById('res-tier-label').textContent = `${level.code} — ${level.label_mn || level.label}`;
+
+  document.getElementById('res-band').textContent = level.label_mn || level.label || '';
+  document.getElementById('res-raw').textContent  = `${correctCount} / ${totalQ} зөв хариулт`;
+  document.getElementById('res-advice').textContent = level.advice_mn ||
+    `Та ${Math.round(pct)}% зөв хариуллаа. Алдсан асуултуудаа дахин харж, дутсан хэсгээ тодорхойлно уу.`;
+
+  // Level ladder — render low to high, highlight achieved
+  const ladderTrack = document.getElementById('ladder-track');
+  ladderTrack.innerHTML = '';
+  const lowToHigh = [...allLevels].reverse();
+  lowToHigh.forEach(lvl => {
+    const step = document.createElement('div');
+    step.className = 'ladder-step' + (lvl === level ? ' achieved' : '');
+    step.innerHTML = `<span class="ladder-code">${lvl.code}</span><span class="ladder-name">${lvl.label_mn || lvl.label}</span>`;
+    ladderTrack.appendChild(step);
+  });
+
+  // Show results panel
+  document.getElementById('submit-btn').style.display = 'none';
+  const resultsEl = document.getElementById('results');
+  resultsEl.style.display = 'block';
+  resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Animated count-up (percentage)
+  const scoreEl = document.getElementById('res-scaled');
+  scoreEl.textContent = '0%';
+  scoreEl.classList.add('score-animate-in');
+  const duration = 1400;
+  const startTime = performance.now();
+
+  function countUp(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(pct * eased);
+    scoreEl.textContent = current + '%';
+    if (progress < 1) requestAnimationFrame(countUp);
+  }
+
+  setTimeout(() => {
+    requestAnimationFrame(countUp);
+    setTimeout(() => {
+      document.getElementById('ladder-bar').style.width = pct + '%';
+    }, 200);
+  }, 500);
+}
+
+// ── COPY SCORE ────────────────────────────────────────────────────
+function copyScore() {
+  const score = document.getElementById('res-scaled').textContent;
+  const raw   = document.getElementById('res-raw').textContent;
+  const tier  = document.getElementById('res-tier-label').textContent;
+  const title = document.getElementById('hero-title').textContent.trim();
+
+  const text = `📊 ${title} — AnthonyTheSabakumono
+━━━━━━━━━━━━━━━━━
+🏆 Түвшин: ${tier}
+📋 ${raw}  (${score})
+━━━━━━━━━━━━━━━━━
+🔗 youtube.com/@AnthonyTheSabakumono`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.share-btn');
+    const icon = document.getElementById('copy-icon');
+    icon.textContent = '✓';
+    btn.style.background = 'var(--green)';
+    setTimeout(() => { icon.textContent = '📋'; btn.style.background = ''; }, 2000);
+  });
+}
+
+// ── RESET ────────────────────────────────────────────────────────
+function resetTest() {
+  submitted     = false;
+  timerStarted  = false;
+  clearInterval(timerInterval);
+  document.getElementById('timer').style.color = '';
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.getElementById('results').style.display    = 'none';
+  document.getElementById('submit-btn').style.display  = 'block';
+  document.getElementById('submit-btn').disabled       = true;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  document.getElementById('main-content').style.display = 'none';
+  document.getElementById('loading-screen').style.display = 'flex';
+  setTimeout(loadAndBuild, 200);
+}
+
+// ── SCROLL TOP ───────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('scroll-top').classList.toggle('visible', window.scrollY > 400);
+});
+
+// ── INIT ─────────────────────────────────────────────────────────
+loadAndBuild();
+</script>
+</body>
+</html>
