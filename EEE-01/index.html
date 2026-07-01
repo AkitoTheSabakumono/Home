@@ -214,37 +214,173 @@
 
   /* ── RESULTS ── */
   .results { max-width: 760px; margin: 0 auto; padding: 0 24px 80px; display: none; }
+
+  /* score hero */
   .result-hero {
-    text-align: center; padding: 48px 24px 36px;
+    text-align: center; padding: 52px 24px 40px;
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; margin-bottom: 20px;
+    border-radius: 12px; margin-bottom: 16px;
     position: relative; overflow: hidden;
   }
+  /* top shimmer line */
   .result-hero::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    background: linear-gradient(90deg, transparent 0%, var(--gold-dim) 20%, var(--gold) 50%, var(--gold-dim) 80%, transparent 100%);
+    animation: shimmer-line 3s ease-in-out infinite;
   }
-  .result-score-big { font-family: 'DM Serif Display', serif; font-size: 72px; color: var(--gold); line-height: 1; margin-bottom: 6px; }
-  .result-score-label { font-size: 12px; color: var(--text-dim); font-family: 'DM Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; }
-  .result-band { font-size: 16px; color: var(--text); margin-top: 14px; font-family: 'DM Serif Display', serif; }
-  .result-raw { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-dim); margin-top: 6px; }
+  @keyframes shimmer-line {
+    0%,100% { opacity: 0.5; }
+    50%      { opacity: 1; }
+  }
+  /* ambient glow behind score */
+  .result-hero::after {
+    content: ''; position: absolute;
+    top: 50%; left: 50%; transform: translate(-50%, -60%);
+    width: 280px; height: 280px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
 
-  .breakdown-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 16px; }
-  .bk-card {
+  /* tier badge — color swapped by JS class */
+  .result-tier-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 5px 16px; border-radius: 20px; margin-bottom: 20px;
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    border: 1px solid var(--gold-dim);
+    background: var(--gold-glow); color: var(--gold);
+    transition: all 0.4s;
+  }
+  .result-tier-badge.tier-elite  { border-color: #C9A84C; background: rgba(201,168,76,0.12); color: #E8C96A; }
+  .result-tier-badge.tier-strong { border-color: #6A9A5A; background: rgba(106,154,90,0.10); color: #8aba78; }
+  .result-tier-badge.tier-dev    { border-color: #7A5E28; background: rgba(201,168,76,0.06); color: #C9A84C; }
+  .result-tier-badge.tier-begin  { border-color: #5A5A5A; background: rgba(90,90,90,0.10);   color: #888; }
+  .tier-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: currentColor; opacity: 0.8;
+  }
+
+  /* big animated score */
+  .result-score-big {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(80px, 14vw, 108px);
+    line-height: 1; margin-bottom: 4px;
+    letter-spacing: -0.02em;
+    background: linear-gradient(160deg, var(--gold-bright) 0%, var(--gold) 60%, var(--gold-dim) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative; z-index: 1;
+  }
+  .result-score-label {
+    font-size: 11px; color: var(--text-dim);
+    font-family: 'DM Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .result-band {
+    font-size: 17px; color: var(--text); margin-top: 16px;
+    font-family: 'DM Serif Display', serif; letter-spacing: 0.01em;
+  }
+  .result-raw {
+    font-family: 'DM Mono', monospace; font-size: 11.5px;
+    color: var(--text-dim); margin-top: 8px; letter-spacing: 0.04em;
+  }
+
+  /* score ring */
+  .score-ring-wrap {
+    position: relative; display: inline-block; margin-bottom: 8px;
+  }
+  .score-ring {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 170px; height: 170px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.15);
+    box-shadow: 0 0 40px rgba(201,168,76,0.06), inset 0 0 40px rgba(201,168,76,0.03);
+    pointer-events: none;
+    animation: ring-pulse 3s ease-in-out infinite;
+  }
+  @keyframes ring-pulse {
+    0%,100% { opacity: 0.4; transform: translate(-50%,-50%) scale(1); }
+    50%      { opacity: 0.9; transform: translate(-50%,-50%) scale(1.04); }
+  }
+
+  /* breakdown section */
+  .breakdown-section { margin-bottom: 16px; }
+  .breakdown-label {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 12px; display: flex; align-items: center; gap: 12px;
+  }
+  .breakdown-label::before, .breakdown-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  .bk-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px;
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 16px; text-align: center;
+    border-radius: var(--radius); margin-bottom: 8px;
+    transition: border-color 0.2s;
   }
-  .bk-num { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--text); }
-  .bk-pct { font-size: 11px; color: var(--gold); font-family: 'DM Mono', monospace; }
-  .bk-label { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+  .bk-row:hover { border-color: var(--gold-dim); }
+  .bk-icon {
+    font-size: 15px; width: 28px; text-align: center; flex-shrink: 0;
+  }
+  .bk-info { flex: 1; min-width: 0; }
+  .bk-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 7px; }
+  .bk-name {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    color: var(--text-mid, #9a9590); letter-spacing: 0.07em; text-transform: uppercase;
+  }
+  .bk-score-text {
+    font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text);
+    white-space: nowrap;
+  }
+  .bk-score-text .bk-pct-val { color: var(--gold); margin-left: 6px; }
+  /* bar track */
+  .bk-bar-track {
+    height: 4px; background: var(--border); border-radius: 2px; overflow: hidden;
+  }
+  .bk-bar-fill {
+    height: 100%; border-radius: 2px; width: 0%;
+    transition: width 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .bk-bar-fill.bar-gold  { background: linear-gradient(90deg, var(--gold-dim), var(--gold)); }
+  .bk-bar-fill.bar-green { background: linear-gradient(90deg, #4a7a3a, var(--green)); }
+  .bk-bar-fill.bar-red   { background: linear-gradient(90deg, #7a2828, var(--red)); }
 
+  /* advice card */
   .advice-card {
     background: var(--surface); border: 1px solid var(--border);
-    border-left: 3px solid var(--gold); border-radius: var(--radius);
+    border-left: 3px solid var(--gold-dim); border-radius: var(--radius);
     padding: 18px 20px; margin-bottom: 16px;
+    transition: border-left-color 0.4s;
   }
-  .advice-title { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--gold); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-  .advice-text { font-size: 13.5px; color: var(--text-dim); line-height: 1.65; }
+  .advice-title {
+    font-size: 10px; font-family: 'DM Mono', monospace; color: var(--gold);
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .advice-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .advice-text { font-size: 13.5px; color: var(--text-dim); line-height: 1.7; }
+
+  /* share row */
+  .result-share {
+    display: flex; gap: 8px; margin-bottom: 12px;
+  }
+  .share-btn {
+    flex: 1; padding: 11px 14px;
+    background: var(--gold); border: none; border-radius: 6px;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+    color: #1a1000; cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+  }
+  .share-btn:hover { background: var(--gold-bright); transform: translateY(-1px); }
+  .share-btn.secondary {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-dim); flex: 0 0 auto; padding: 11px 16px;
+  }
+  .share-btn.secondary:hover { border-color: var(--gold-dim); color: var(--text); background: transparent; transform: translateY(-1px); }
 
   .reset-btn {
     width: 100%; padding: 12px; background: transparent;
@@ -253,6 +389,13 @@
     cursor: pointer; transition: all 0.15s;
   }
   .reset-btn:hover { border-color: var(--gold-dim); color: var(--text); }
+
+  /* count-up reveal animation */
+  @keyframes score-reveal {
+    from { opacity: 0; transform: translateY(10px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .score-animate-in { animation: score-reveal 0.5s cubic-bezier(0.22,1,0.36,1) both; }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 540px) {
@@ -412,22 +555,84 @@
 
 <!-- RESULTS -->
 <div class="results" id="results">
+
+  <!-- Score hero -->
   <div class="result-hero">
-    <div class="result-score-big" id="res-scaled">—</div>
-    <div class="result-score-label">Таны ЭЕШ оноо (200–800)</div>
+    <div class="result-tier-badge" id="res-tier-badge">
+      <span class="tier-dot"></span>
+      <span id="res-tier-label">—</span>
+    </div>
+    <div class="score-ring-wrap">
+      <div class="score-ring"></div>
+      <div class="result-score-big" id="res-scaled">—</div>
+    </div>
+    <div class="result-score-label">Таны ЭЕШ оноо · 200–800 хуваарь</div>
     <div class="result-band" id="res-band"></div>
     <div class="result-raw" id="res-raw"></div>
   </div>
-  <div class="breakdown-grid">
-    <div class="bk-card"><div class="bk-num" id="bk-gr">—</div><div class="bk-pct" id="bk-gr-pct"></div><div class="bk-label">Grammar</div></div>
-    <div class="bk-card"><div class="bk-num" id="bk-vc">—</div><div class="bk-pct" id="bk-vc-pct"></div><div class="bk-label">Vocabulary</div></div>
-    <div class="bk-card"><div class="bk-num" id="bk-rd">—</div><div class="bk-pct" id="bk-rd-pct"></div><div class="bk-label">Reading</div></div>
+
+  <!-- Section breakdown -->
+  <div class="breakdown-section">
+    <div class="breakdown-label">Хэсгийн үр дүн</div>
+
+    <div class="bk-row">
+      <div class="bk-icon">📐</div>
+      <div class="bk-info">
+        <div class="bk-top">
+          <span class="bk-name">Grammar</span>
+          <span class="bk-score-text">
+            <span id="bk-gr">—</span>
+            <span class="bk-pct-val" id="bk-gr-pct"></span>
+          </span>
+        </div>
+        <div class="bk-bar-track"><div class="bk-bar-fill bar-gold" id="bar-gr"></div></div>
+      </div>
+    </div>
+
+    <div class="bk-row">
+      <div class="bk-icon">📖</div>
+      <div class="bk-info">
+        <div class="bk-top">
+          <span class="bk-name">Vocabulary</span>
+          <span class="bk-score-text">
+            <span id="bk-vc">—</span>
+            <span class="bk-pct-val" id="bk-vc-pct"></span>
+          </span>
+        </div>
+        <div class="bk-bar-track"><div class="bk-bar-fill bar-gold" id="bar-vc"></div></div>
+      </div>
+    </div>
+
+    <div class="bk-row">
+      <div class="bk-icon">🔍</div>
+      <div class="bk-info">
+        <div class="bk-top">
+          <span class="bk-name">Reading</span>
+          <span class="bk-score-text">
+            <span id="bk-rd">—</span>
+            <span class="bk-pct-val" id="bk-rd-pct"></span>
+          </span>
+        </div>
+        <div class="bk-bar-track"><div class="bk-bar-fill bar-gold" id="bar-rd"></div></div>
+      </div>
+    </div>
   </div>
-  <div class="advice-card">
-    <div class="advice-title"> Anthony's Analysis</div>
+
+  <!-- Advice -->
+  <div class="advice-card" id="advice-card">
+    <div class="advice-title">Anthony's Analysis</div>
     <div class="advice-text" id="res-advice"></div>
   </div>
+
+  <!-- Actions -->
+  <div class="result-share">
+    <button class="share-btn" onclick="copyScore()">
+      <span id="copy-icon">📋</span> Оноо хуулах
+    </button>
+    <button class="share-btn secondary" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Дээш</button>
+  </div>
   <button class="reset-btn" onclick="resetTest()">↺ Ахин өгөх — шинэ асуулттай</button>
+
 </div>
 
 </div><!-- /main-content -->
@@ -646,27 +851,37 @@ function submitTest() {
   const scaled    = Math.round(200 + weighted * 600);
   const totalCorrect = grCorrect + vcCorrect + rdCorrect;
 
-  document.getElementById('res-scaled').textContent = scaled;
-  document.getElementById('res-raw').textContent    = `${totalCorrect} / ${totalQ} correct`;
-
-  let band, advice;
+  // Determine tier
+  let tierClass, tierLabel, band, advice;
   if (scaled >= 700) {
-    band   = "🏆 Гайхалтай — ойролцоогоор Top 5%";
+    tierClass = 'tier-elite'; tierLabel = '★ Top 5% — Шилдэг';
+    band   = "Гайхалтай үр дүн";
     advice = `Маш сайн! ${scaled} оноо — энэ бол шилдэг оюутнуудын түвшин. Grammar: ${grCorrect}/${grammarQs.length}, Vocabulary: ${vcCorrect}/${vocabQs.length}, Reading: ${rdCorrect}/${rdTotal}. Алдсан асуултуудаа дахин харж, яг ямар grammar rule дутсаныг тодорлоо. Энэ түвшнийхэд IELTS 6.5+ хялбар байх болно.`;
   } else if (scaled >= 580) {
-    band   = "👍 Strong — Юу ч гэсэн Их сургуульд орох нь";
+    tierClass = 'tier-strong'; tierLabel = '✓ Strong — Их сургуульд орно';
+    band   = "Сайн дүн — зорилгодоо хүрч байна";
     advice = `Сайн байна! ${scaled} оноо — их сургуульд элсэхэд хангалттай. Grammar-д ${grCorrect}/${grammarQs.length} авлаа. Хамгийн их алдаа гарсан хэсгийг дахин давт. 2 долоо хоног дасгал хийвэл 650+ авах боломжтой.`;
   } else if (scaled >= 450) {
-    band   = "📚 Developing — Төвлөрч бэлдэх хэрэгтэй";
+    tierClass = 'tier-dev'; tierLabel = '◈ Developing — Бэлдэж байна';
+    band   = "Дунд түвшин — нэмэлт дасгал хэрэгтэй";
     advice = `Бүү санаа зов — ${scaled} оноо авлаа. Grammar (${grCorrect}/${grammarQs.length}), Vocabulary (${vcCorrect}/${vocabQs.length}), Reading (${rdCorrect}/${rdTotal}). Манай сувгаас хичээл үзэж, эсвэл өөр хүссэн даалгаврууд дагнан хий. 1 сар бэлдвэл 100+ оноо нэмэгдэнэ.`;
   } else {
-    band   = "💪 Beginner — Хэн бүхэнд эхлэл байдаг";
+    tierClass = 'tier-begin'; tierLabel = '◇ Beginner — Эхлэл';
+    band   = "Эхлэл — хэн бүхэнд эхлэл байдаг";
     advice = `${scaled} оноо авлаа. Grammar (${grCorrect}/${grammarQs.length}): Энэ бол хамгийн чухал хэсэг. Нийт оноо grammar-аас их шалтгаалдаг. Articles, conditionals, tenses-аас эхэл. Өдөр бүр нэг grammar video үзэж, энэ тестийг 3 долоо хоногийн дараа дахин хий.`;
   }
 
+  // Set tier badge
+  const badge = document.getElementById('res-tier-badge');
+  badge.className = 'result-tier-badge ' + tierClass;
+  document.getElementById('res-tier-label').textContent = tierLabel;
+
+  // Set static text fields
   document.getElementById('res-band').textContent   = band;
+  document.getElementById('res-raw').textContent    = `${totalCorrect} / ${totalQ} зөв хариулт`;
   document.getElementById('res-advice').textContent = advice;
 
+  // Section breakdown bars + text
   document.getElementById('bk-gr').textContent     = `${grCorrect}/${grammarQs.length}`;
   document.getElementById('bk-gr-pct').textContent = Math.round(grPct*100) + '%';
   document.getElementById('bk-vc').textContent     = `${vcCorrect}/${vocabQs.length}`;
@@ -674,9 +889,79 @@ function submitTest() {
   document.getElementById('bk-rd').textContent     = `${rdCorrect}/${rdTotal}`;
   document.getElementById('bk-rd-pct').textContent = Math.round(rdPct*100) + '%';
 
+  // Show results panel
   document.getElementById('submit-btn').style.display = 'none';
-  document.getElementById('results').style.display    = 'block';
-  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const resultsEl = document.getElementById('results');
+  resultsEl.style.display = 'block';
+  resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // ── Animated count-up for big score ──────────────────────────
+  const scoreEl = document.getElementById('res-scaled');
+  scoreEl.textContent = '200';
+  scoreEl.classList.add('score-animate-in');
+  const startVal = 200;
+  const endVal   = scaled;
+  const duration = 1400; // ms
+  const startTime = performance.now();
+
+  function countUp(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    // ease-out cubic
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(startVal + (endVal - startVal) * eased);
+    scoreEl.textContent = current;
+    if (progress < 1) requestAnimationFrame(countUp);
+  }
+
+  // Small delay so scroll finishes first, then trigger count-up + bars together
+  setTimeout(() => {
+    requestAnimationFrame(countUp);
+    // Trigger bar animations
+    setTimeout(() => {
+      document.getElementById('bar-gr').style.width = Math.round(grPct * 100) + '%';
+      document.getElementById('bar-vc').style.width = Math.round(vcPct * 100) + '%';
+      document.getElementById('bar-rd').style.width = Math.round(rdPct * 100) + '%';
+      // Color bars by performance
+      ['gr','vc','rd'].forEach((s, i) => {
+        const pct = [grPct, vcPct, rdPct][i];
+        const bar = document.getElementById('bar-' + s);
+        bar.className = 'bk-bar-fill ' + (pct >= 0.7 ? 'bar-green' : pct >= 0.4 ? 'bar-gold' : 'bar-red');
+      });
+    }, 200);
+  }, 500);
+}
+
+// ── COPY SCORE ────────────────────────────────────────────────────
+function copyScore() {
+  const score = document.getElementById('res-scaled').textContent;
+  const raw   = document.getElementById('res-raw').textContent;
+  const tier  = document.getElementById('res-tier-label').textContent;
+  const grPct = document.getElementById('bk-gr-pct').textContent;
+  const vcPct = document.getElementById('bk-vc-pct').textContent;
+  const rdPct = document.getElementById('bk-rd-pct').textContent;
+  const gr    = document.getElementById('bk-gr').textContent;
+  const vc    = document.getElementById('bk-vc').textContent;
+  const rd    = document.getElementById('bk-rd').textContent;
+
+  const text = `📊 ЭЕШ English Mock Test — AnthonyTheSabakumono
+━━━━━━━━━━━━━━━━━
+🏆 Оноо: ${score} / 800  [${tier}]
+📋 ${raw}
+━━━━━━━━━━━━━━━━━
+📐 Grammar:    ${gr}  (${grPct})
+📖 Vocabulary: ${vc}  (${vcPct})
+🔍 Reading:    ${rd}  (${rdPct})
+━━━━━━━━━━━━━━━━━
+🔗 youtube.com/@AnthonyTheSabakumono`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.share-btn');
+    const icon = document.getElementById('copy-icon');
+    icon.textContent = '✓';
+    btn.style.background = 'var(--green)';
+    setTimeout(() => { icon.textContent = '📋'; btn.style.background = ''; }, 2000);
+  });
 }
 
 // ── RESET ────────────────────────────────────────────────────────
